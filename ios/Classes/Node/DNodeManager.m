@@ -730,4 +730,8 @@
     return [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/DStack"];
 }
 
+// 可以清除所有节点-啫喱
+- (void)removeAllNode {
+    _nodeList = nil;
+}
 @end

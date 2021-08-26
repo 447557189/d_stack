@@ -86,6 +86,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取日志文件内容
 - (nullable NSArray<NSString *> *)logFiles;
 
+// 可以清除所有节点-啫喱
+- (void)removeAllNode;
 @end
 
 NS_ASSUME_NONNULL_END
