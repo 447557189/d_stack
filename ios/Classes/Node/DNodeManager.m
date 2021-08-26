@@ -296,11 +296,12 @@
 {
     NSArray *subArray = @[node];
     [self.nodeList addObject:node];
-    for (DNode *node in self.nodeList) {
-        if (node.pageType == DNodePageTypeFlutter) {
-            node.isFlutterHomePage = YES; break;
-        }
-    }
+    // 修改bug
+//    for (DNode *node in self.nodeList) {
+//        if (node.pageType == DNodePageTypeFlutter) {
+//            node.isFlutterHomePage = YES; break;
+//        }
+//    }
     self.pageCount = self.nodeList.count;
     [self dStackDelegateSafeWithSEL:@selector(dStack:inStack:) exe:^(DStack *stack) {
         DStackNode *stackNode = [DActionManager stackNodeFromNode:node];
