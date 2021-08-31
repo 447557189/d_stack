@@ -32,6 +32,8 @@ public class DStackActivityManager {
         }
     }
 
+    public boolean isFlutterInit = false;
+
     //activity栈集合
     private List<Activity> activities;
     //栈顶activity
@@ -69,6 +71,10 @@ public class DStackActivityManager {
         }
         activities.add(activity);
         setBottomAndTopActivity();
+
+        if (isFlutterActivity(activity)) {
+            isFlutterInit = true;
+        }
     }
 
     /**
@@ -263,7 +269,7 @@ public class DStackActivityManager {
      * 判断是否是FlutterActivity
      */
     public boolean isFlutterActivity(Activity activity) {
-        if (activity instanceof DFlutterActivity) {
+        if (activity instanceof DFlutterActivity || activity instanceof FlutterActivity) {
             return true;
         }
         return false;

@@ -3,6 +3,7 @@ package tal.com.d_stack.observer;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -143,17 +144,21 @@ public class DStackLifecycleObserver implements Application.ActivityLifecycleCal
         }
         boolean isPopTo = DStackActivityManager.getInstance().isExecuteStack();
         DStackActivityManager.getInstance().removeActivity(activity);
-        DNode currentNode = DNodeManager.getInstance().getCurrentNode();
-        DNode node = new DNode.Builder()
-                .target(currentNode.getTarget())
-                .pageType(currentNode.getPageType())
-                .action(DNodeActionType.DNodeActionTypePop)
-                .isHomePage(currentNode.isHomePage())
-                .isRootPage(currentNode.isRootPage())
-                .identifier(currentNode.getIdentifier())
-                .isPopTo(isPopTo)
-                .build();
-        DNodeManager.getInstance().checkNode(node);
+        Log.i("DStack", "onActivityDestroyed:" + activity.getComponentName().getShortClassName());
+        DNode currentNode = DNodeManager.getInstance().findNodeByActivity(activity);
+        if (currentNode != null){
+            DNode node = new DNode.Builder()
+                    .target(currentNode.getTarget())
+                    .pageType(currentNode.getPageType())
+                    .action(DNodeActionType.DNodeActionTypePop)
+                    .isHomePage(currentNode.isHomePage())
+                    .isRootPage(currentNode.isRootPage())
+                    .identifier(currentNode.getIdentifier())
+                    .isPopTo(isPopTo)
+                    .build();
+            DNodeManager.getInstance().checkNode(node);
+        }
+
     }
 
     /**
