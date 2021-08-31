@@ -72,9 +72,13 @@ public class DStack {
         this.context = context;
 
         engine = new FlutterEngine(context);
-        engine.getDartExecutor().executeDartEntrypoint(
-                DartExecutor.DartEntrypoint.createDefault()
-        );
+        if (!engine.getDartExecutor().isExecutingDart()) {
+            engine.getNavigationChannel().setInitialRoute("launch");
+            engine.getDartExecutor().executeDartEntrypoint(
+                    DartExecutor.DartEntrypoint.createDefault()
+            );
+        }
+
         FlutterEngineCache
                 .getInstance()
                 .put(ENGINE_ID, engine);
@@ -152,7 +156,7 @@ public class DStack {
 
         if (!DStack.getInstance().isFlutterApp()) {
             //原生工程
-            if (!DStackActivityManager.getInstance().haveFlutterContainer()) {
+            if (!DStackActivityManager.getInstance().isFlutterInit) {
                 //第一次打开flutter页面，设置flutter页面的homepage为true
                 node.setHomePage(true);
             }

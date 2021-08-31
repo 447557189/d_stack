@@ -1,12 +1,11 @@
 package tal.com.d_stack.node;
 
+import android.app.Activity;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import tal.com.d_stack.action.DActionManager;
@@ -46,6 +45,19 @@ public class DNodeManager {
                 return factory;
             }
         }
+    }
+
+    void printStack(){
+        DLog.logD("------- Start Print Page Stack.");
+        for (DNode dNode : nodeList) {
+            Activity act = dNode.getActivity().get();
+            String actName = " unknown";
+            if (act != null) {
+                actName = act.getComponentName().getShortClassName();
+            }
+            DLog.logD("page: " + dNode.getTarget() + ", act:" + actName);
+        }
+        DLog.logD("------- End Print Page Stack.");
     }
 
     //获取当前节点
@@ -250,6 +262,24 @@ public class DNodeManager {
         for (int i : needRemoveNodesIndex) {
             nodeList.remove(i);
         }
+    }
+
+    public DNode findNodeByActivity(Activity activity) {
+        if (activity == null) {
+            return null;
+        }
+        int size = nodeList.size();
+        if (size == 0) {
+            return null;
+        }
+        printStack();
+        for (int i = size - 1; i >= 0; i--) {
+            DNode dNode = nodeList.get(i);
+            if (activity.equals(dNode.getActivity().get())) {
+                return dNode;
+            }
+        }
+        return null;
     }
 
     /**
