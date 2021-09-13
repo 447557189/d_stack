@@ -52,6 +52,14 @@ class DNavigatorManager {
     }
   }
 
+  static Future pushAndPop(String routeName, PageType pageType,
+      {Map? params, bool? maintainState, bool animated = true}) {
+
+    DNavigatorManager.nodeHandle(routeName, pageType, DStackConstant.pushAndPop,
+        result: params, animated: animated);
+    return Future.value(true);
+  }
+
   static Future animatedFlutterPage(String routeName, { 
     Map? params,
     TransitionType? transition,

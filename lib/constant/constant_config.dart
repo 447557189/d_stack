@@ -9,6 +9,7 @@
 class DStackConstant {
   /// action类型
   static const String push = "push";
+  static const String pushAndPop = "pushAndPop";
   static const String present = "present";
   static const String dismiss = "dismiss";
   static const String pop = "pop";

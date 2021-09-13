@@ -5,6 +5,9 @@ public class DNodeActionType {
 
     // push跳转android
     public static final String DNodeActionTypePush = "push";
+    
+    // 打开新页面的同时，关闭老页面
+    public static final String DNodeActionTypePushAndPop = "pushAndPop";
 
     // present跳转(ios独有)
     public static final String DNodeActionTypePresent = "present";

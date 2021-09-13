@@ -18,8 +18,8 @@ public class DStackApplication extends FlutterApplication {
             if (routerUrl.equals("NativePage")) {
                 Intent intent = new Intent();
                 intent.setClass(application, NativeThreeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                application.startActivity(intent);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                application.getCurrentActivity().startActivity(intent);
             }
         });
         DStack.getInstance().setOpenNodeOperation(true);

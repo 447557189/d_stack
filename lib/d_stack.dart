@@ -132,6 +132,12 @@ class DStack {
         params: params, maintainState: maintainState, animated: animated);
   }
 
+  static Future pushAndPop(String routeName,
+      {Map? params, bool maintainState = true, bool animated = true}) {
+    return DNavigatorManager.pushAndPop(routeName, PageType.native,
+        params: params, maintainState: maintainState, animated: animated);
+  }
+
   /// 弹出一个页面
   /// animated 是否有进场动画
   static Future present(String routeName, PageType pageType,
