@@ -8,6 +8,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
 import static io.flutter.embedding.android.FlutterActivityLaunchConfigs.DEFAULT_INITIAL_ROUTE;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.Lifecycle;
 import io.flutter.FlutterInjector;
 import io.flutter.Log;
+import io.flutter.app.FlutterApplication;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterEngineCache;
 import io.flutter.embedding.engine.FlutterShellArgs;
@@ -420,6 +422,12 @@ import java.util.Arrays;
 
         ensureAlive();
         flutterEngine.getLifecycleChannel().appIsResumed();
+
+        Application app = (Application) ((Activity)host).getApplicationContext();
+        if (app instanceof FlutterApplication) {
+            FlutterApplication flutterApp = (FlutterApplication) app;
+            flutterApp.setCurrentActivity((Activity)host);
+        }
     }
 
     /**

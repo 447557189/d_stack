@@ -17,6 +17,13 @@ class TestCase {
   /// 打开flutter页面用例
   static List<Map> openFlutterPageCase = [
     {
+      "text": "【push】NativePage 无动画",
+      "clicked": (context) {
+        DStack.pushAndPop("NativePage",
+            params: {"name": "flutter 传递的", "id": 1000000}, animated: false);
+      }
+    },
+    {
       "text": "【pop】 有动画",
       "clicked": (context) {
         DStack.pop();

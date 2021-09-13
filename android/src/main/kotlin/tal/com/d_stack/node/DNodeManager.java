@@ -72,6 +72,10 @@ public class DNodeManager {
         }
         actionType = node.getAction();
         switch (actionType) {
+            case DNodeActionType.DNodeActionTypePushAndPop:
+                DNode current = getCurrentNode();
+                handleNeedRemoveFlutterNode(current);
+                removeNodeWithOnDestroyed(current);
             case DNodeActionType.DNodeActionTypePush:
             case DNodeActionType.DNodeActionTypePresent:
                 //打开新页面
@@ -447,6 +451,9 @@ public class DNodeManager {
             if (node.getPageType().equals(DNodePageType.DNodePageTypeFlutter)
                     && currentNode.getPageType().equals(DNodePageType.DNodePageTypeFlutter)
                     && node.getTarget().equals(currentNode.getTarget())) {
+                if (nodeList.size() == 1) {
+                    return true;
+                }
                 if (nodeList.size() >= 2) {
                     DNode lastSecondNode = nodeList.get(nodeList.size() - 2);
                     if (lastSecondNode.getPageType().equals(DNodePageType.DNodePageTypeNative)) {
