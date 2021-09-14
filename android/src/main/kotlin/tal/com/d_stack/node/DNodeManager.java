@@ -50,10 +50,13 @@ public class DNodeManager {
     void printStack(){
         DLog.logD("------- Start Print Page Stack.");
         for (DNode dNode : nodeList) {
-            Activity act = dNode.getActivity().get();
             String actName = " unknown";
-            if (act != null) {
-                actName = act.getComponentName().getShortClassName();
+            if (dNode.getActivity() != null) {
+                Activity act = dNode.getActivity().get();
+                actName = " unknown";
+                if (act != null) {
+                    actName = act.getComponentName().getShortClassName();
+                }
             }
             DLog.logD("page: " + dNode.getTarget() + ", act:" + actName);
         }
@@ -279,8 +282,10 @@ public class DNodeManager {
         printStack();
         for (int i = size - 1; i >= 0; i--) {
             DNode dNode = nodeList.get(i);
-            if (activity.equals(dNode.getActivity().get())) {
-                return dNode;
+            if (dNode.getActivity() != null) {
+                if (activity.equals(dNode.getActivity().get())) {
+                    return dNode;
+                }
             }
         }
         return null;
