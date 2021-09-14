@@ -73,7 +73,7 @@ public class DStack {
 
         engine = new FlutterEngine(context);
         if (!engine.getDartExecutor().isExecutingDart()) {
-            engine.getNavigationChannel().setInitialRoute("launch");
+//            engine.getNavigationChannel().setInitialRoute("login");
             engine.getDartExecutor().executeDartEntrypoint(
                     DartExecutor.DartEntrypoint.createDefault()
             );
