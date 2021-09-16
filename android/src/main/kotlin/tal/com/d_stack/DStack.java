@@ -3,6 +3,8 @@ package tal.com.d_stack;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.MessageQueue;
 import android.text.TextUtils;
 
 import java.util.Map;
@@ -62,6 +64,8 @@ public class DStack {
 
     private boolean openNodeOperation;
 
+    private Handler mHandler;
+
     /**
      * 初始化DStack
      *
@@ -86,6 +90,8 @@ public class DStack {
         initMethodChannel(engine);
         setNativeRouter(nativeRouter);
         registerAppLifecycleObserver(context);
+
+        mHandler = new Handler(context.getMainLooper());
     }
 
     /**
@@ -144,7 +150,7 @@ public class DStack {
      * @param params       参数
      * @param containerCls flutter页面容器activity的类对象
      */
-    public void pushFlutterPage(String pageRouter, Map<String, Object> params, Class<?> containerCls) {
+    public void pushFlutterPage(String pageRouter, Map<String, Object> params, final Class<?> containerCls) {
         DLog.logD("要打开的flutter页面路由是：" + pageRouter);
         DNode node = new DNode.Builder()
                 .target(pageRouter)
@@ -162,10 +168,33 @@ public class DStack {
             }
         }
 
+        // 先给flutter发消息再打开flutter容器activity，避免短暂白屏问题
+        DNodeManager.getInstance().checkNode(node);
         // 如果连续打开同一个Flutter控制器，则做个判断，只打开一次activity
         boolean isSameActivity = DStackActivityManager.getInstance().isSameActivity(containerCls);
-        DNodeManager.getInstance().checkNode(node);
-        // 先给flutter发消息再打开flutter容器activity，避免短暂白屏问题
+
+        if (!isSameActivity) {
+            openFlutterActivity(containerCls);
+        } else {
+            mHandler.getLooper().getQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+                @Override
+                public boolean queueIdle() {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            openFlutterActivity(containerCls);
+                        }
+                    }, 300);
+                    return false;
+                }
+            });
+        }
+
+    }
+
+    private void openFlutterActivity(Class<?> containerCls) {
+        // 如果连续打开同一个Flutter控制器，则做个判断，只打开一次activity
+        boolean isSameActivity = DStackActivityManager.getInstance().isSameActivity(containerCls);
         if (!isSameActivity) {
             Intent intent = FlutterActivity.withCachedEngine(ENGINE_ID).build(context);
             intent.setClass(context, containerCls);
@@ -199,18 +228,26 @@ public class DStack {
             }
         }
 
-
+        // 先给flutter发消息再打开flutter容器activity，避免短暂白屏问题
+        DNodeManager.getInstance().checkNode(node);
         // 如果连续打开同一个Flutter控制器，则做个判断，只打开一次activity
         boolean isSameActivity = DStackActivityManager.getInstance().isSameActivity(containerCls);
-        DNodeManager.getInstance().checkNode(node);
-        // 先给flutter发消息再打开flutter容器activity，避免短暂白屏问题
+
         if (!isSameActivity) {
-            Intent intent = FlutterActivity.withCachedEngine(ENGINE_ID)
-                    .backgroundMode(FlutterActivityLaunchConfigs.BackgroundMode.transparent)
-                    .build(context);
-            intent.setClass(context, containerCls);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            openFlutterActivity(containerCls);
+        } else {
+            mHandler.getLooper().getQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+                @Override
+                public boolean queueIdle() {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            openFlutterActivity(containerCls);
+                        }
+                    }, 300);
+                    return false;
+                }
+            });
         }
     }
 
