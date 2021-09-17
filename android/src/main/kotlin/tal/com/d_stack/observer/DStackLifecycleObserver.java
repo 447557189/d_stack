@@ -145,7 +145,7 @@ public class DStackLifecycleObserver implements Application.ActivityLifecycleCal
         boolean isPopTo = DStackActivityManager.getInstance().isExecuteStack();
         DStackActivityManager.getInstance().removeActivity(activity);
         Log.i("DStack", "onActivityDestroyed:" + activity.getComponentName().getShortClassName());
-        DNode currentNode = DNodeManager.getInstance().findNodeByActivity(activity);
+        DNode currentNode = DNodeManager.getInstance().getCurrentNode();
         if (currentNode != null){
             DNode node = new DNode.Builder()
                     .target(currentNode.getTarget())
