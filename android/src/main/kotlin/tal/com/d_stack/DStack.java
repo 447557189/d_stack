@@ -210,7 +210,7 @@ public class DStack {
      * @param params       参数
      * @param containerCls flutter页面容器activity的类对象
      */
-    public void pushFlutterPageWithTransparent(String pageRouter, Map<String, Object> params, Class<?> containerCls) {
+    public void pushFlutterPageWithTransparent(String pageRouter, Map<String, Object> params,final Class<?> containerCls) {
         DLog.logD("要打开的flutter页面路由是：" + pageRouter);
         DNode node = new DNode.Builder()
                 .target(pageRouter)
